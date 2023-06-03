@@ -24,10 +24,11 @@ export async function getUserFragments(user) {
     return data;
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
+    return {msg:err.message};
   }
 }
 
-export async function postFragment(user) {
+export async function postFragment(user, text) {
   console.log('Posting fragments data...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments`, {
@@ -37,7 +38,7 @@ export async function postFragment(user) {
         Authorization: user.authorizationHeaders().Authorization,
         'Content-Type': 'text/plain',
       },
-      body: '"The cloud services have brought us into an era of computing that has made it possible to reach more customers and do more things than we ever could before." - Jeff Bezos, Founder of Amazon',
+      body: text
     });
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
@@ -47,6 +48,7 @@ export async function postFragment(user) {
     return data;
   } catch (err) {
     console.error('Unable to call Post /v1/fragment', { err });
+    return JSON.stringify({ msg: err.message });
   }
 }
 
@@ -62,6 +64,8 @@ export async function getHealthCheck() {
     return data;
   } catch (err) {
     console.error('Unable to call GET /', { err });
+
+    return JSON.stringify({ msg: err.message });
   }
 }
 
@@ -80,6 +84,7 @@ export async function getFragmentByIdReq(user, id) {
     return data;
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
+    return err.message;
   }
 }
 
@@ -97,5 +102,6 @@ export async function getUserFragmentsExp(user) {
     return data;
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
+    return { msg: err.message };
   }
 }

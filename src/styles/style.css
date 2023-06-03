@@ -1,0 +1,11 @@
+.json-container {
+    background-color: #f4f4f4;
+    padding: 10px;
+    overflow-x: auto;
+    margin-top: 10px;
+  }
+
+section{
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

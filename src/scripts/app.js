@@ -3,15 +3,14 @@
 import { Auth, getUser } from './auth';
 import { getUserFragments, postFragment, getHealthCheck, getFragmentByIdReq, getUserFragmentsExp } from './api';
 
-let fragmentId = null;
-
 async function init() {
   // Get our UI elements
   const userSection = document.querySelector('#user');
   const loginBtn = document.querySelector('#login');
   const logoutBtn = document.querySelector('#logout');
-  const postFragmentBtn = document.querySelector('#postFragment');
-  const jsonContainer = document.querySelector('#json-container');
+  const postFragmentRoute = document.querySelector('#postFragment');
+  const getContainer = document.querySelector('#getContainer');
+  const postContainer = document.querySelector('#postContainer');
   const getHealth = document.querySelector('#getHealth');
   const getFragmentsById = document.querySelector('#getFragmentsId');
   const getUserFrag = document.querySelector('#getUserFragments');
@@ -29,17 +28,15 @@ async function init() {
     Auth.signOut();
   };
 
-  postFragmentBtn.onclick = async () => {
-    let data = await postFragment(user);
+  postFragmentRoute.onsubmit = async (event) => {
+    event.preventDefault();
+    let data = await postFragment(user,event.target.elements[0].value);
     if (data) {
       // Parse the JSON string
       var jsonData = JSON.parse(data);
-      fragmentId = jsonData.fragment.id;
-      getFragmentsById.disabled = false;
       // Convert JSON to a formatted string
       var formattedJson = JSON.stringify(jsonData, null, 2);
-      jsonContainer.innerText = formattedJson;
-      jsonContainer.hidden = false;
+      postContainer.innerText = formattedJson;
     }
   };
 
@@ -50,41 +47,31 @@ async function init() {
       var jsonData = JSON.parse(data);
       // Convert JSON to a formatted string
       var formattedJson = JSON.stringify(jsonData, null, 2);
-      jsonContainer.innerText = formattedJson;
-      jsonContainer.hidden = false;
+      getContainer.innerText = formattedJson;
     }
   };
 
-  getFragmentsById.onclick = async () => {
-    let data = await getFragmentByIdReq(user,fragmentId);
+  getFragmentsById.onsubmit = async (event) => {
+    event.preventDefault()
+    let data = await getFragmentByIdReq(user,event.target.elements[0].value);
     if (data) {
-      jsonContainer.innerText = data
+      getContainer.innerText = data
     }
   };
 
   getUserFrag.onclick = async () =>{
     let data = await getUserFragments(user);
     if (data) {
-      // Parse the JSON string
-      //var jsonData = JSON.parse(data);
-      // Convert JSON to a formatted string
       var formattedJson = JSON.stringify(data, null, 2);
-      userSection.hidden = false;
-      jsonContainer.innerText = formattedJson;
-      jsonContainer.hidden = false;
+      getContainer.innerText = formattedJson;
     }
   }
 
   getUserFragExpanded.onclick = async () =>{
     let data = await getUserFragmentsExp(user);
     if (data) {
-      // Parse the JSON string
-      //var jsonData = JSON.parse(data);
-      // Convert JSON to a formatted string
       var formattedJson = JSON.stringify(data, null, 2);
-      userSection.hidden = false;
-      jsonContainer.innerText = formattedJson;
-      jsonContainer.hidden = false;
+      getContainer.innerText = formattedJson;
     }
   };
 
@@ -94,9 +81,9 @@ async function init() {
   if (!user) {
     // Disable the Logout button
     logoutBtn.disabled = true;
-    postFragmentBtn.disabled = true;
+    postFragmentRoute.querySelector('button').disabled = true;
     getUserFrag.disabled = true;
-    getFragmentsById.disabled = true;
+    getFragmentsById.querySelector('button').disabled = true;
     getUserFragExpanded.disabled = true;
     return;
   }
@@ -111,7 +98,8 @@ async function init() {
   userSection.hidden = false;
 
   // Show the user's username
-  userSection.querySelector('.username').innerText = user.username;
+  userSection.querySelector('.username').innerText = user.username.charAt(0).toUpperCase()
+  + user.username.slice(1)
 
   // Disable the Login button
   loginBtn.disabled = true;

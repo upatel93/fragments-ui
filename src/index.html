@@ -2,47 +2,156 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Fragments UI</title>
-    <link rel="stylesheet" href="https://unpkg.com/bamboo.css" />
-    <style>
-      pre {
-        background-color: #f4f4f4;
-        padding: 10px;
-        overflow-x: auto;
-      }
-      body{
-        max-width: 90ch;
-      }
-    </style>
-    <script type="module" src="./app.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./styles//bootstrap.min.css" />
+    <link rel="stylesheet" href="./styles/style.css" />
+    <script type="module" src="./scripts/app.js"></script>
   </head>
   <body>
-    <h1>Fragments UI</h1>
-    <section>
-      <nav><button id="login">Login</button> <button id="logout">Logout</button><br /><br /></nav>
-    </section>
-    <hr />
-    <div>
-      <h3>Assignment 1 Routes</h3>
-      <hr />
-      <p>Unsecured Routes <small>Note: GET /fragments/:id will unlock after POST</small></p>
-      <button id="getHealth">GET /</button>
-      <hr />
-      <p>Secured Routes</p>
-      <button id="postFragment">POST /fragments</button>
-      <button id="getUserFragments">GET /fragments</button>
-      <br /><br />
-      <button id="getFragmentsId">GET /fragments/:id</button>
-      <button id="getUserFragmentsExpanded">GET /fragments?expand=1</button>
-      <br />
-    </div>
+    <nav class="fixed-top navbar-dark bg-primary navbar navbar-expand-md navbar-light">
+      <div class="container">
+        <span class="navbar-brand"
+          >Fragments UI
+          <span hidden id="user"> : Hello <span class="username"></span> !</span></span
+        >
+        <div class="navbar-nav d-flex">
+          <button type="button" id="login" class="btn btn-success" style="margin-left: 5px">
+            Login
+          </button>
+          <button type="button" id="logout" class="btn btn-danger" style="margin-left: 5px">
+            Logout
+          </button>
+        </div>
+      </div>
+    </nav>
+    <br /><br />
     <br />
-    <hr />
-    <section hidden id="user">
-      <h4>Hello <span class="username"></span>!</h4>
-      <span>Route test text will be displayed below..!!</span>
-      <br />
-      <pre id="json-container" hidden></pre>
-    </section>
+    <br />
+    <div class="container">
+      <div class="container">
+        <h4>Welcome to Fragments UI - Cloud-Based Microservice! API Tester.!</h4>
+      </div>
+      <div class="accordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseOne"
+              aria-expanded="false"
+              aria-controls="collapseOne"
+            >
+              GET Routes
+            </button>
+          </h2>
+          <div
+            id="collapseOne"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <span> Unsecured Routes </span>
+              <hr />
+              <section>
+                <button class="btn btn-primary" id="getHealth">Health Check - GET /</button>
+              </section>
+              <hr />
+              <span> Secured Routes </span>
+              <section>
+                <button class="btn btn-primary" id="getUserFragments">GET /fragments</button>
+              </section>
+              <section>
+                <form action="" class="row g-3" id="getFragmentsId" method="get">
+                  <div class="col-auto">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="ID"
+                      name="fragment-id"
+                      id="fragment-id"
+                      required
+                    />
+                  </div>
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">GET /fragments/:id</button>
+                    <button type="reset" class="btn btn-primary">Clear</button>
+                  </div>
+                </form>
+              </section>
+              <section>
+                <button id="getUserFragmentsExpanded" class="btn btn-primary">
+                  GET /fragments?expand=1
+                </button>
+              </section>
+              <section>
+                <pre class="json-container" id="getContainer">
+ "Respnse Body will appeare here" </pre
+                >
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseTwo"
+              aria-expanded="false"
+              aria-controls="collapseOne"
+            >
+              POST Routes
+            </button>
+          </h2>
+          <div
+            id="collapseTwo"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingTwo"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <section>
+                <form action="" class="row g-3" id="postFragment" method="post">
+                  <div class="col-auto">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter text to send.."
+                      name="myText"
+                      id="myText"
+                      required
+                    />
+                  </div>
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">POST /fragments</button>
+                    <button type="reset" class="btn btn-primary">Clear</button>
+                  </div>
+                </form>
+              </section>
+              <section>
+                <pre class="json-container" id="postContainer">
+ "Respnse Body will appeare here" </pre
+                >
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>
