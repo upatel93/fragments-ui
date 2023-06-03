@@ -4,15 +4,45 @@
     <meta charset="utf-8" />
     <title>Fragments UI</title>
     <link rel="stylesheet" href="https://unpkg.com/bamboo.css" />
+    <style>
+      pre {
+        background-color: #f4f4f4;
+        padding: 10px;
+        overflow-x: auto;
+      }
+      body{
+        max-width: 90ch;
+      }
+    </style>
     <script type="module" src="./app.js"></script>
   </head>
   <body>
     <h1>Fragments UI</h1>
     <section>
-      <nav><button id="login">Login</button> <button id="logout">Logout</button></nav>
+      <nav><button id="login">Login</button> <button id="logout">Logout</button><br /><br /></nav>
     </section>
+    <hr />
+    <div>
+      <h3>Assignment 1 Routes</h3>
+      <hr />
+      <p>Unsecured Routes <small>Note: GET /fragments/:id will unlock after POST</small></p>
+      <button id="getHealth">GET /</button>
+      <hr />
+      <p>Secured Routes</p>
+      <button id="postFragment">POST /fragments</button>
+      <button id="getUserFragments">GET /fragments</button>
+      <br /><br />
+      <button id="getFragmentsId">GET /fragments/:id</button>
+      <button id="getUserFragmentsExpanded">GET /fragments?expand=1</button>
+      <br />
+    </div>
+    <br />
+    <hr />
     <section hidden id="user">
-      <h2>Hello <span class="username"></span>!</h2>
+      <h4>Hello <span class="username"></span>!</h4>
+      <span>Route test text will be displayed below..!!</span>
+      <br />
+      <pre id="json-container" hidden></pre>
     </section>
   </body>
 </html>

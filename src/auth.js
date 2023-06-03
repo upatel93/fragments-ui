@@ -1,3 +1,4 @@
+/* global process */
 // src/auth.js
 
 import { Amplify, Auth } from 'aws-amplify';

@@ -6,7 +6,8 @@
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx parcel src/index.html "
+    "start": "npx parcel src/index.html ",
+    "lint": "eslint --config .eslintrc.js \"./src/**/*.js\""
   },
   "repository": {
     "type": "git",
@@ -19,7 +20,9 @@
     "parcel": "^2.8.3",
     "process": "^0.11.10",
     "punycode": "^1.4.1",
-    "querystring-es3": "^0.2.1"
+    "querystring-es3": "^0.2.1",
+    "eslint": "^8.40.0",
+    "prettier": "2.8.8"
   },
   "dependencies": {
     "aws-amplify": "^5.2.2"
