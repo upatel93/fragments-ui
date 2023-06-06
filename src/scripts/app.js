@@ -1,7 +1,14 @@
 // src/app.js
 
 import { Auth, getUser } from './auth';
-import { getUserFragments, postFragment, getHealthCheck, getFragmentByIdReq, getUserFragmentsExp } from './api';
+import {
+  getUserFragments,
+  postFragment,
+  postFragmentImage,
+  getHealthCheck,
+  getFragmentByIdReq,
+  getUserFragmentsExp,
+} from './api';
 
 async function init() {
   // Get our UI elements
@@ -9,6 +16,7 @@ async function init() {
   const loginBtn = document.querySelector('#login');
   const logoutBtn = document.querySelector('#logout');
   const postFragmentRoute = document.querySelector('#postFragment');
+  const postFragmentimage = document.querySelector('#imageForm');
   const getContainer = document.querySelector('#getContainer');
   const postContainer = document.querySelector('#postContainer');
   const getHealth = document.querySelector('#getHealth');
@@ -30,7 +38,22 @@ async function init() {
 
   postFragmentRoute.onsubmit = async (event) => {
     event.preventDefault();
-    let data = await postFragment(user,event.target.elements[0].value);
+    const to_send = { value: event.target.elements[0].value, type: event.target.elements[1].value };
+    console.log(to_send);
+    let data = await postFragment(user, to_send);
+    if (data) {
+      // Parse the JSON string
+      var jsonData = JSON.parse(data);
+      // Convert JSON to a formatted string
+      var formattedJson = JSON.stringify(jsonData, null, 2);
+      postContainer.innerText = formattedJson;
+    }
+  };
+
+  postFragmentimage.onsubmit = async (event) => {
+    event.preventDefault();
+    var imageFile = event.target.elements[0].files[0];
+    let data = await postFragmentImage(user, imageFile);
     if (data) {
       // Parse the JSON string
       var jsonData = JSON.parse(data);
@@ -52,29 +75,40 @@ async function init() {
   };
 
   getFragmentsById.onsubmit = async (event) => {
-    event.preventDefault()
-    let data = await getFragmentByIdReq(user,event.target.elements[0].value);
+    event.preventDefault();
+    let data = await getFragmentByIdReq(user, event.target.elements[0].value);
     if (data) {
-      getContainer.innerText = data
+      try {
+        // Try to create an image URL from the data
+        const imageUrl = URL.createObjectURL(data);
+        // Create an <img> element and set its source to the image URL
+        const imgElement = document.createElement('img');
+        imgElement.src = imageUrl;
+        // Clear the content of getContainer and append the image element
+        getContainer.innerText = '';
+        getContainer.appendChild(imgElement);
+      } catch {
+        // If creating the image element fails, display the data as text
+        getContainer.innerText = data;
+      }
     }
   };
 
-  getUserFrag.onclick = async () =>{
+  getUserFrag.onclick = async () => {
     let data = await getUserFragments(user);
     if (data) {
       var formattedJson = JSON.stringify(data, null, 2);
       getContainer.innerText = formattedJson;
     }
-  }
+  };
 
-  getUserFragExpanded.onclick = async () =>{
+  getUserFragExpanded.onclick = async () => {
     let data = await getUserFragmentsExp(user);
     if (data) {
       var formattedJson = JSON.stringify(data, null, 2);
       getContainer.innerText = formattedJson;
     }
   };
-
 
   // See if we're signed in (i.e., we'll have a `user` object)
   const user = await getUser();
@@ -85,6 +119,7 @@ async function init() {
     getUserFrag.disabled = true;
     getFragmentsById.querySelector('button').disabled = true;
     getUserFragExpanded.disabled = true;
+    postFragmentimage.querySelector('button').disabled = true;
     return;
   }
 
@@ -98,15 +133,16 @@ async function init() {
   userSection.hidden = false;
 
   // Show the user's username
-  userSection.querySelector('.username').innerText = user.username.charAt(0).toUpperCase()
-  + user.username.slice(1)
+  userSection.querySelector('.username').innerText =
+    user.username.charAt(0).toUpperCase() + user.username.slice(1);
 
   // Disable the Login button
   loginBtn.disabled = true;
-  
+
   // Disabling getFragmentsById till user post it and we get id.
   getFragmentsById.disabled = true;
 }
 
 // Wait for the DOM to be ready, then start the app
 addEventListener('DOMContentLoaded', init);
+

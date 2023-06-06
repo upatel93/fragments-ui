@@ -121,7 +121,8 @@
           >
             <div class="accordion-body">
               <section>
-                <form action="" class="row g-3" id="postFragment" method="post">
+                <p>Texts</p>
+                <form action="" class="row g-3" id="postFragment" method="post" enctype="multipart/form-data">
                   <div class="col-auto">
                     <input
                       type="text"
@@ -133,10 +134,36 @@
                     />
                   </div>
                   <div class="col-auto">
+                    <select id="myOption" name="myOption" class="form-select" required>
+                      <option value="text/plain" selected>Plain</option>
+                      <option value="text/markdown">Markdown</option>
+                      <option value="text/html">HTML</option>
+                    </select>
+                  </div>
+                  <div class="col-auto">
                     <button type="submit" class="btn btn-primary">POST /fragments</button>
                     <button type="reset" class="btn btn-primary">Clear</button>
                   </div>
                 </form>
+                <br>
+                <p>Image Files <small>Not supported yet..</small></p>
+                <form action="" class="row g-3" id="imageForm" method="post" enctype="multipart/form-data">
+                  <div class="col-auto">
+                    <input
+                      type="file"
+                      class="form-control"
+                      placeholder="Select an Image.."
+                      name="myImage"
+                      id="myImage"
+                      required
+                    />
+                  </div>
+                  <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">POST /fragments</button>
+                    <button type="reset" class="btn btn-primary">Clear</button>
+                  </div>
+                </form>
+
               </section>
               <section>
                 <pre class="json-container" id="postContainer">
