@@ -3,26 +3,32 @@
 import { Auth, getUser } from './auth';
 import {
   getUserFragments,
-  postFragment,
+  getFragmentById_API,
+  getHealthCheck_API,
+  getFragmentsExp_API,
+  postFragment_API,
   postFragmentImage,
-  getHealthCheck,
-  getFragmentByIdReq,
-  getUserFragmentsExp,
 } from './api';
 
 async function init() {
-  // Get our UI elements
+  // User UI elements
   const userSection = document.querySelector('#user');
   const loginBtn = document.querySelector('#login');
   const logoutBtn = document.querySelector('#logout');
-  const postFragmentRoute = document.querySelector('#postFragment');
-  const postFragmentimage = document.querySelector('#imageForm');
-  const getContainer = document.querySelector('#getContainer');
-  const postContainer = document.querySelector('#postContainer');
+
+  // Get Routes UI Elements
   const getHealth = document.querySelector('#getHealth');
-  const getFragmentsById = document.querySelector('#getFragmentsId');
-  const getUserFrag = document.querySelector('#getUserFragments');
-  const getUserFragExpanded = document.querySelector('#getUserFragmentsExpanded');
+  const getFragmentById = document.querySelector('#getFragmentById');
+  const getFragments = document.querySelector('#getFragments');
+  const getFragmentsExp = document.querySelector('#getFragmentsExp');
+  // Get Container
+  const getContainer = document.querySelector('#getContainer');
+
+  // Post Routes UI Element
+  const postFragmentTxt = document.querySelector('#postFragmentTxt');
+  const postFragmentImg = document.querySelector('#postFragmentImg');
+  // Get Container
+  const postContainer = document.querySelector('#postContainer');
 
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
@@ -36,77 +42,70 @@ async function init() {
     Auth.signOut();
   };
 
-  postFragmentRoute.onsubmit = async (event) => {
-    event.preventDefault();
-    const to_send = { value: event.target.elements[0].value, type: event.target.elements[1].value };
-    console.log(to_send);
-    let data = await postFragment(user, to_send);
-    if (data) {
-      // Parse the JSON string
-      var jsonData = JSON.parse(data);
-      // Convert JSON to a formatted string
-      var formattedJson = JSON.stringify(jsonData, null, 2);
-      postContainer.innerText = formattedJson;
-    }
-  };
-
-  postFragmentimage.onsubmit = async (event) => {
-    event.preventDefault();
-    var imageFile = event.target.elements[0].files[0];
-    let data = await postFragmentImage(user, imageFile);
-    if (data) {
-      // Parse the JSON string
-      var jsonData = JSON.parse(data);
-      // Convert JSON to a formatted string
-      var formattedJson = JSON.stringify(jsonData, null, 2);
-      postContainer.innerText = formattedJson;
-    }
-  };
-
+  // GET Routes............................................................................
   getHealth.onclick = async () => {
-    let data = await getHealthCheck();
+    let data = await getHealthCheck_API();
     if (data) {
-      // Parse the JSON string
-      var jsonData = JSON.parse(data);
-      // Convert JSON to a formatted string
-      var formattedJson = JSON.stringify(jsonData, null, 2);
-      getContainer.innerText = formattedJson;
+      getContainer.innerText = JSON.stringify(data, null, 2);
     }
   };
 
-  getFragmentsById.onsubmit = async (event) => {
+  getFragmentById.onsubmit = async (event) => {
     event.preventDefault();
-    let data = await getFragmentByIdReq(user, event.target.elements[0].value);
-    if (data) {
+    let data = await getFragmentById_API(user, event.target.elements[0].value);
+    if (data && data.type == 'image') {
       try {
         // Try to create an image URL from the data
-        const imageUrl = URL.createObjectURL(data);
+        const imageUrl = URL.createObjectURL(data.data);
         // Create an <img> element and set its source to the image URL
         const imgElement = document.createElement('img');
         imgElement.src = imageUrl;
         // Clear the content of getContainer and append the image element
         getContainer.innerText = '';
         getContainer.appendChild(imgElement);
-      } catch {
-        // If creating the image element fails, display the data as text
+      } catch (err) {
+        getContainer.innerText = err.message;
+      }
+    } else {
+      if (data.type === 'json') {
+        getContainer.innerText = JSON.stringify(data.data, null, 2);
+      } else {
         getContainer.innerText = data;
       }
     }
   };
 
-  getUserFrag.onclick = async () => {
+  getFragments.onclick = async () => {
     let data = await getUserFragments(user);
     if (data) {
-      var formattedJson = JSON.stringify(data, null, 2);
-      getContainer.innerText = formattedJson;
+      getContainer.innerText = JSON.stringify(data, null, 2);
     }
   };
 
-  getUserFragExpanded.onclick = async () => {
-    let data = await getUserFragmentsExp(user);
+  getFragmentsExp.onclick = async () => {
+    let data = await getFragmentsExp_API(user);
     if (data) {
-      var formattedJson = JSON.stringify(data, null, 2);
-      getContainer.innerText = formattedJson;
+      getContainer.innerText = JSON.stringify(data, null, 2);
+    }
+  };
+
+  // Post Routes...........................................................................
+  postFragmentTxt.onsubmit = async (event) => {
+    event.preventDefault();
+    const to_send = { value: event.target.elements[0].value, type: event.target.elements[1].value };
+    // For Debug
+    console.log(to_send);
+    let data = await postFragment_API(user, to_send);
+    if (data) {
+      postContainer.innerText = JSON.stringify(data.data, null, 2);
+    }
+  };
+
+  postFragmentImg.onsubmit = async (event) => {
+    event.preventDefault();
+    let data = await postFragmentImage(user, event.target.elements[0].files[0]);
+    if (data) {
+      postContainer.innerText = JSON.stringify(data.data, null, 2);
     }
   };
 
@@ -115,11 +114,11 @@ async function init() {
   if (!user) {
     // Disable the Logout button
     logoutBtn.disabled = true;
-    postFragmentRoute.querySelector('button').disabled = true;
-    getUserFrag.disabled = true;
-    getFragmentsById.querySelector('button').disabled = true;
-    getUserFragExpanded.disabled = true;
-    postFragmentimage.querySelector('button').disabled = true;
+    postFragmentTxt.querySelector('button').disabled = true;
+    getFragments.disabled = true;
+    getFragmentById.querySelector('button').disabled = true;
+    getFragmentsExp.disabled = true;
+    postFragmentImg.querySelector('button').disabled = true;
     return;
   }
 
@@ -140,9 +139,8 @@ async function init() {
   loginBtn.disabled = true;
 
   // Disabling getFragmentsById till user post it and we get id.
-  getFragmentsById.disabled = true;
+  getFragmentById.disabled = true;
 }
 
 // Wait for the DOM to be ready, then start the app
 addEventListener('DOMContentLoaded', init);
-

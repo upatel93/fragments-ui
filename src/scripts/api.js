@@ -24,18 +24,18 @@ export async function getUserFragments(user) {
     return data;
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
-    return { msg: err.message };
+    return { error: err.message };
   }
 }
 
 /**
  * Posts a new fragment for the authenticated user.
- * 
+ *
  * @param {Object} user - The authenticated user.
  * @param {Object} text - The fragment text to be posted.
  * @returns {string} - The response data from the API.
  */
-export async function postFragment(user, text) {
+export async function postFragment_API(user, text) {
   console.log('Posting fragments data...');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments`, {
@@ -47,21 +47,37 @@ export async function postFragment(user, text) {
       },
       body: text.value,
     });
+    // Catching Known Errors
+    if (res.status === 404 || res.status === 415) {
+      let data = await res.json();
+      return {
+        data,
+        type: 'json',
+      };
+    }
+    // Catching Unknown Errors
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
-    const data = await res.text();
-    console.log('Got the Response.', { data });
-    return data;
+    // Everything is good...
+    const data = await res.json();
+    console.log('Got the Response.', data);
+    return {
+      data,
+      type: 'json',
+    };
   } catch (err) {
     console.error('Unable to call Post /v1/fragment', { err });
-    return JSON.stringify({ msg: err.message });
+    return {
+      type: 'json',
+      data: { error: err.message },
+    };
   }
 }
 
 /**
  * Posts a new fragment image for the authenticated user.
- * 
+ *
  * @param {Object} user - The authenticated user.
  * @param {Object} imageFile - The fragment image file to be posted.
  * @returns {string} - The response data from the API.
@@ -78,60 +94,88 @@ export async function postFragmentImage(user, imageFile) {
       },
       body: imageFile,
     });
+    // Catching Known Errors
+    if (res.status === 404 || res.status === 415) {
+      let data = await res.json();
+      return {
+        data,
+        type: 'json',
+      };
+    }
+    // Catching Unknown Errors
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
-    const data = await res.text();
-    console.log('Got the Response.', { data });
-    return data;
+    // Everything is good...
+    const data = await res.json();
+    console.log('Got the Response.', data);
+    return {
+      data,
+      type: 'json',
+    };
   } catch (err) {
     console.error('Unable to call Post /v1/fragment', { err });
-    return JSON.stringify({ msg: err.message });
+    return {
+      type: 'json',
+      data: { error: err.message },
+    };
   }
 }
 
 /**
  * Sends a health check request to the API.
- * 
+ *
  * @returns {string} - The response data from the API.
  */
-export async function getHealthCheck() {
-  console.log('Posting fragments data...');
+export async function getHealthCheck_API() {
   try {
     const res = await fetch(`${apiUrl}`);
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
-    const data = await res.text();
+    const data = await res.json();
     console.log('Got the Response.', data);
     return data;
   } catch (err) {
     console.error('Unable to call GET /', { err });
-    return JSON.stringify({ msg: err.message });
+    return { error: err.message };
   }
 }
 
 /**
  * Retrieves a specific fragment by its ID for the authenticated user.
- * 
+ *
  * @param {Object} user - The authenticated user.
  * @param {string} id - The ID of the fragment to retrieve.
- * @returns {Blob|string} - The fragment data (either blob for image or string for text) from the API.
+ * @returns {Blob|string|JSON} - The fragment data (either blob for image , string for text or JSON) from the API.
  */
-export async function getFragmentByIdReq(user, id) {
+export async function getFragmentById_API(user, id) {
   console.log('Requesting to get fragment data..');
   try {
     const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
       // Generate headers with the proper Authorization bearer token to pass
       headers: user.authorizationHeaders(),
     });
+    // Catching Known Errors
+    if (res.status === 404 || res.status === 415) {
+      let data = await res.json();
+      return {
+        data,
+        type: 'json',
+      };
+    }
+    // Catching Unknown Errors
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
+    // If image convert it to blob
     if (res.headers.get('content-type').includes('image')) {
+      //Not Supported yet.
       const data = await res.blob();
-      console.log('Got user fragment', { data });
-      return data;
+      return {
+        data,
+        type: 'image',
+      };
     } else {
       const data = await res.text();
       console.log('Got user fragment', { data });
@@ -139,7 +183,10 @@ export async function getFragmentByIdReq(user, id) {
     }
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
-    return err.message;
+    return {
+      type: 'json',
+      data: { error: err.message },
+    };
   }
 }
 
@@ -149,7 +196,7 @@ export async function getFragmentByIdReq(user, id) {
  * We expect a user to have an `idToken` attached, so we can send that along
  * with the request.
  */
-export async function getUserFragmentsExp(user) {
+export async function getFragmentsExp_API(user) {
   try {
     const res = await fetch(`${apiUrl}/v1/fragments?expand=1`, {
       // Generate headers with the proper Authorization bearer token to pass
@@ -163,6 +210,6 @@ export async function getUserFragmentsExp(user) {
     return data;
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
-    return { msg: err.message };
+    return { error: err.message };
   }
 }
