@@ -176,11 +176,61 @@ export async function getFragmentById_API(user, id) {
         data,
         type: 'image',
       };
-    } else {
+    } else if (res.headers.get('content-type').includes('markdown')){
+      const data = await res.text();
+      console.log('Got user fragment in MD', { data });
+      return {
+        data,
+        type: 'md',
+      };
+    }
+    else if (res.headers.get('content-type').includes('html')){
+      const data = await res.text();
+      console.log('Got user fragment in HTML', { data });
+      return {
+        data,
+        type: 'html',
+      };
+    }
+    else {
       const data = await res.text();
       console.log('Got user fragment', { data });
       return data;
     }
+  } catch (err) {
+    console.error('Unable to call GET /v1/fragment', { err });
+    return {
+      type: 'json',
+      data: { error: err.message },
+    };
+  }
+}
+
+export async function getFragmentInfoById_API(user, id) {
+  console.log('Requesting to get fragment Metadata...');
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}/info`, {
+      // Generate headers with the proper Authorization bearer token to pass
+      headers: user.authorizationHeaders(),
+    });
+    // Catching Known Errors
+    if (res.status === 404) {
+      let data = await res.json();
+      return {
+        data,
+        type: 'json',
+      };
+    }
+    // Catching Unknown Errors
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    console.log('Got user fragment', data);
+    return {
+      data,
+      type: 'json',
+    };
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
     return {

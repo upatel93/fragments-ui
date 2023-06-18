@@ -71,7 +71,7 @@
               </section>
               <section>
                 <form action="" class="row g-3" id="getFragmentById" method="get">
-                  <div class="col-auto">
+                  <div class="col">
                     <input
                       type="text"
                       class="form-control"
@@ -82,7 +82,8 @@
                     />
                   </div>
                   <div class="col-auto">
-                    <button type="submit" class="btn btn-primary">GET /fragments/:id</button>
+                    <button type="submit" name="withOutInfo" class="btn btn-primary">GET /fragments/:id</button>
+                    <button type="submit" name="withInfo" class="btn btn-primary">GET /fragments/:id/info</button>
                     <button type="reset" class="btn btn-primary">Clear</button>
                   </div>
                 </form>
@@ -128,20 +129,21 @@
                   enctype="multipart/form-data"
                 >
                   <div class="col-auto">
-                    <input
+                    <textarea
                       type="text"
                       class="form-control"
                       placeholder="Enter text to send.."
                       name="myText"
                       id="myText"
                       required
-                    />
+                    /></textarea>
                   </div>
                   <div class="col-auto">
                     <select id="myOption" name="myOption" class="form-select" required>
                       <option value="text/plain" selected>Plain</option>
                       <option value="text/markdown">Markdown</option>
                       <option value="text/html">HTML</option>
+                      <option value="application/json">JSON</option>
                     </select>
                   </div>
                   <div class="col-auto">

@@ -4,6 +4,7 @@ import { Auth, getUser } from './auth';
 import {
   getUserFragments,
   getFragmentById_API,
+  getFragmentInfoById_API,
   getHealthCheck_API,
   getFragmentsExp_API,
   postFragment_API,
@@ -52,7 +53,14 @@ async function init() {
 
   getFragmentById.onsubmit = async (event) => {
     event.preventDefault();
-    let data = await getFragmentById_API(user, event.target.elements[0].value);
+    const clickedButtonName = event.submitter.getAttribute('name');
+    console.log(clickedButtonName);
+    let data = null;
+    if (clickedButtonName === 'withInfo') {
+      data = await getFragmentInfoById_API(user, event.target.elements[0].value);
+    } else {
+      data = await getFragmentById_API(user, event.target.elements[0].value);
+    }
     if (data && data.type == 'image') {
       try {
         // Try to create an image URL from the data
@@ -66,7 +74,13 @@ async function init() {
       } catch (err) {
         getContainer.innerText = err.message;
       }
-    } else {
+    } else if(data.type === 'md'){
+      getContainer.innerHTML = data.data
+    }else if(data.type === 'html'){
+      getContainer.innerHTML = data.data
+    }
+    
+    else {
       if (data.type === 'json') {
         getContainer.innerText = JSON.stringify(data.data, null, 2);
       } else {
