@@ -9,6 +9,7 @@ import {
   getFragmentsExp_API,
   postFragment_API,
   postFragmentImage,
+  deleteFragmentById_API,
 } from './api';
 
 async function init() {
@@ -28,8 +29,13 @@ async function init() {
   // Post Routes UI Element
   const postFragmentTxt = document.querySelector('#postFragmentTxt');
   const postFragmentImg = document.querySelector('#postFragmentImg');
-  // Get Container
+  // Post Container
   const postContainer = document.querySelector('#postContainer');
+
+  // Delete Routes UI Element
+  const deleteFragmentById = document.querySelector('#deleteFragmentById');
+  // Delete Container
+  const deleteContainer = document.querySelector('#deleteContainer');
 
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
@@ -122,6 +128,16 @@ async function init() {
       postContainer.innerText = JSON.stringify(data.data, null, 2);
     }
   };
+
+  // Delete Routes........................................................................
+  deleteFragmentById.onsubmit = async (event) =>{
+    event.preventDefault();
+    let data = await deleteFragmentById_API(user,event.target.elements[0].value);
+    if (data) {
+      console.log(data);
+      deleteContainer.innerText = JSON.stringify(data, null, 2);
+    }
+  }
 
   // See if we're signed in (i.e., we'll have a `user` object)
   const user = await getUser();

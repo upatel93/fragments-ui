@@ -176,23 +176,21 @@ export async function getFragmentById_API(user, id) {
         data,
         type: 'image',
       };
-    } else if (res.headers.get('content-type').includes('markdown')){
+    } else if (res.headers.get('content-type').includes('markdown')) {
       const data = await res.text();
       console.log('Got user fragment in MD', { data });
       return {
         data,
         type: 'md',
       };
-    }
-    else if (res.headers.get('content-type').includes('html')){
+    } else if (res.headers.get('content-type').includes('html')) {
       const data = await res.text();
       console.log('Got user fragment in HTML', { data });
       return {
         data,
         type: 'html',
       };
-    }
-    else {
+    } else {
       const data = await res.text();
       console.log('Got user fragment', { data });
       return data;
@@ -261,5 +259,20 @@ export async function getFragmentsExp_API(user) {
   } catch (err) {
     console.error('Unable to call GET /v1/fragment', { err });
     return { error: err.message };
+  }
+}
+
+export async function deleteFragmentById_API(user, id) {
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      method: 'DELETE',
+      // Generate headers with the proper Authorization bearer token to pass
+      headers: user.authorizationHeaders(),
+    });
+    const data = await res.json();
+    return data;
+  } catch (error) {
+    console.error(`Unable to call DELETE /v1/fragmens/${id}`, { error });
+    return { error: error.message };
   }
 }
