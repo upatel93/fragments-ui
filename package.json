@@ -1,12 +1,11 @@
 {
   "name": "fragments-ui",
-  "private": true,
   "version": "0.0.1",
   "description": "Fragments UI testing web app",
-  "browserslist": "> 0.5%, last 2 versions, not dead",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx parcel src/index.html ",
+    "start": "npx parcel src/index.html",
+    "build": "parcel build src/index.html --public-url ./",
     "lint": "eslint --config .eslintrc.js \"./src/**/*.js\""
   },
   "repository": {
@@ -15,16 +14,20 @@
   },
   "author": "Ujjval Patel <upatel69@myseneca.ca>",
   "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20.1.0"
+  },
   "devDependencies": {
-    "buffer": "^5.7.1",
-    "parcel": "^2.8.3",
-    "process": "^0.11.10",
-    "punycode": "^1.4.1",
-    "querystring-es3": "^0.2.1",
     "eslint": "^8.40.0",
     "prettier": "2.8.8"
   },
   "dependencies": {
-    "aws-amplify": "^5.2.2"
-  }
+    "aws-amplify": "^5.2.2",
+    "parcel": "^2.8.3",
+    "buffer": "^5.7.1",
+    "process": "^0.11.10",
+    "punycode": "^1.4.1",
+    "querystring-es3": "^0.2.1"
+  },
+  "browserslist": "> 0.5%, last 2 versions, not dead"
 }
