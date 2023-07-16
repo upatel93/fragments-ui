@@ -27,9 +27,23 @@ WORKDIR /app
 # Copy the entire source code into the image
 COPY . .
 
-# Build the site to /app/dist and removed .env after build
+ARG API_URL && \
+    AWS_COGNITO_POOL_ID && \
+    AWS_COGNITO_CLIENT_ID && \
+    AWS_COGNITO_HOSTED_UI_DOMAIN && \
+    OAUTH_SIGN_IN_REDIRECT_URL && \
+    OAUTH_SIGN_OUT_REDIRECT_URL 
+
+ENV API_URL=${API_URL:-undefined} \
+    AWS_COGNITO_POOL_ID=${AWS_COGNITO_POOL_ID:-undefined} \
+    AWS_COGNITO_CLIENT_ID=${AWS_COGNITO_CLIENT_ID:-undefined} \
+    AWS_COGNITO_HOSTED_UI_DOMAIN=${AWS_COGNITO_HOSTED_UI_DOMAIN:-undefined}  \
+    OAUTH_SIGN_IN_REDIRECT_URL=${OAUTH_SIGN_IN_REDIRECT_URL:-undefined} \
+    OAUTH_SIGN_OUT_REDIRECT_URL=${OAUTH_SIGN_OUT_REDIRECT_URL:-undefined}
+
+# Build the site to /app/dist and remove .env after build
 RUN npx parcel build src/index.html && \
-    rm /app/.env
+    unset API_URL AWS_COGNITO_POOL_ID AWS_COGNITO_CLIENT_ID AWS_COGNITO_HOSTED_UI_DOMAIN OAUTH_SIGN_IN_REDIRECT_URL OAUTH_SIGN_OUT_REDIRECT_URL
 
 ########################################################################
 
