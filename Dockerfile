@@ -27,11 +27,9 @@ WORKDIR /app
 # Copy the entire source code into the image
 COPY . .
 
-# Build the site to /app/dist
-RUN npx parcel build src/index.html
-
-# Remove the .env file
-RUN rm /app/.env
+# Build the site to /app/dist and removed .env after build
+RUN npx parcel build src/index.html && \
+    rm /app/.env
 
 ########################################################################
 
