@@ -18,6 +18,7 @@ RUN apk add --no-cache python3=3.10.12-r0 make=4.3-r1 g++=12.2.1_git20220924-r4 
 
 #######################################################################
 
+
 # Stage 1: Use dependencies to build the site
 FROM dependencies AS builder
 
@@ -28,6 +29,9 @@ COPY . .
 
 # Build the site to /app/dist
 RUN npx parcel build src/index.html
+
+# Remove the .env file
+RUN rm /app/.env
 
 ########################################################################
 
