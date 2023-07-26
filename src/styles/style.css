@@ -1,11 +1,16 @@
 .json-container {
-    background-color: #f4f4f4;
-    padding: 10px;
-    overflow-x: auto;
-    margin-top: 10px;
-  }
+  background-color: #f4f4f4;
+  padding: 10px;
+  overflow-x: auto;
+  margin-top: 10px;
+}
 
-section{
+#putFragmentById {
+  width: 80%;
+  margin: 0 auto; /* This centers the form horizontally */
+}
+
+section {
   margin-top: 5px;
   margin-bottom: 5px;
 }

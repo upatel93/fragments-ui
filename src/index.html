@@ -82,8 +82,12 @@
                     />
                   </div>
                   <div class="col-auto">
-                    <button type="submit" name="withOutInfo" class="btn btn-primary">GET /fragments/:id</button>
-                    <button type="submit" name="withInfo" class="btn btn-primary">GET /fragments/:id/info</button>
+                    <button type="submit" name="withOutInfo" class="btn btn-primary">
+                      GET /fragments/:id
+                    </button>
+                    <button type="submit" name="withInfo" class="btn btn-primary">
+                      GET /fragments/:id/info
+                    </button>
                     <button type="reset" class="btn btn-primary">Clear</button>
                   </div>
                 </form>
@@ -94,7 +98,9 @@
                 </button>
               </section>
               <section>
-                <pre class="json-container" id="getContainer"> Respnse Body will appeare here </pre>
+                <pre class="json-container" id="getContainer">
+ Response Body will appeare here </pre
+                >
               </section>
             </div>
           </div>
@@ -136,7 +142,7 @@
                       name="myText"
                       id="myText"
                       required
-                    /></textarea>
+                    ></textarea>
                   </div>
                   <div class="col-auto">
                     <select id="myOption" name="myOption" class="form-select" required>
@@ -152,7 +158,7 @@
                   </div>
                 </form>
                 <br />
-                <p>Image Files <small>  Not supported yet..</small></p>
+                <p>Image Files</p>
                 <form
                   action=""
                   class="row g-3"
@@ -178,7 +184,7 @@
               </section>
               <section>
                 <pre class="json-container" id="postContainer">
- Respnse Body will appeare here </pre
+ Response Body will appeare here </pre
                 >
               </section>
             </div>
@@ -194,13 +200,93 @@
               aria-expanded="false"
               aria-controls="collapseThree"
             >
-              DELETE Routes
+              PUT Routes
             </button>
           </h2>
           <div
             id="collapseThree"
             class="accordion-collapse collapse"
             aria-labelledby="headingThree"
+            data-bs-parent="#accordionExample"
+          >
+            <div class="accordion-body">
+              <section>
+                <form action="" class="row g-3" id="putFragmentById">
+                  <div class="col">
+                    <div class="col">
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="ID"
+                        name="fragment-id"
+                        id="fragment-id"
+                        required
+                      />
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                      <label for="myText" class="form-label">Text:</label>
+                      <textarea
+                        type="text"
+                        class="form-control"
+                        placeholder="Enter text to send.."
+                        name="myText"
+                        id="myText"
+                        rows="5"
+                        cols="40"
+                      ></textarea>
+
+                      <label for="myOption" class="form-label">Text Type</label>
+                      <select id="myOption" name="myOption" class="form-select">
+                        <option value="text/plain" selected>Plain</option>
+                        <option value="text/markdown">Markdown</option>
+                        <option value="text/html">HTML</option>
+                        <option value="application/json">JSON</option>
+                      </select>
+                    </div>
+                    <hr>
+                    <div class="mb-3">
+                      <label for="myImage" class="form-label">Image:</label>
+                      <input
+                        type="file"
+                        class="form-control"
+                        placeholder="Select an Image.."
+                        name="myImage"
+                        id="myImage"
+                      />
+                    </div>
+                    <div class="mb-3 d-flex justify-content-center">
+                      <button type="submit" class="btn btn-primary">PUT /fragments/:id</button>
+                      <button type="reset" class="btn btn-primary mx-2">Clear</button>
+                    </div>
+                  </div>
+                </form>
+              </section>
+              <section>
+                <pre class="json-container" id="putContainer">
+ Response Body will appeare here </pre
+                >
+              </section>
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingFour">
+            <button
+              class="accordion-button collapsed"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#collapseFour"
+              aria-expanded="false"
+              aria-controls="collapseFour"
+            >
+              DELETE Routes
+            </button>
+          </h2>
+          <div
+            id="collapseFour"
+            class="accordion-collapse collapse"
+            aria-labelledby="headingFour"
             data-bs-parent="#accordionExample"
           >
             <div class="accordion-body">
@@ -221,6 +307,7 @@
                     <button type="reset" class="btn btn-primary">Clear</button>
                   </div>
                 </form>
+              </section>
               <section>
                 <pre class="json-container" id="deleteContainer">
  Response Body will appeare here </pre

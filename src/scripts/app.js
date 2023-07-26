@@ -9,6 +9,7 @@ import {
   getFragmentsExp_API,
   postFragment_API,
   postFragmentImage,
+  putFragment_API,
   deleteFragmentById_API,
 } from './api';
 
@@ -31,6 +32,11 @@ async function init() {
   const postFragmentImg = document.querySelector('#postFragmentImg');
   // Post Container
   const postContainer = document.querySelector('#postContainer');
+
+  //Put Routes UI Element
+  const putFragmentById = document.querySelector('#putFragmentById');
+  // Putt Container
+  const putContainer = document.querySelector('#putContainer');
 
   // Delete Routes UI Element
   const deleteFragmentById = document.querySelector('#deleteFragmentById');
@@ -80,13 +86,11 @@ async function init() {
       } catch (err) {
         getContainer.innerText = err.message;
       }
-    } else if(data.type === 'md'){
-      getContainer.innerHTML = data.data
-    }else if(data.type === 'html'){
-      getContainer.innerHTML = data.data
-    }
-    
-    else {
+    } else if (data.type === 'md') {
+      getContainer.innerHTML = data.data;
+    } else if (data.type === 'html') {
+      getContainer.innerHTML = data.data;
+    } else {
       if (data.type === 'json') {
         getContainer.innerText = JSON.stringify(data.data, null, 2);
       } else {
@@ -129,15 +133,54 @@ async function init() {
     }
   };
 
-  // Delete Routes........................................................................
-  deleteFragmentById.onsubmit = async (event) =>{
+  // Put Routes............................................................................
+
+  putFragmentById.onsubmit = async (event) => {
     event.preventDefault();
-    let data = await deleteFragmentById_API(user,event.target.elements[0].value);
+    const id = event.target.elements[0].value;
+    const text = event.target.elements[1].value;
+    const contentType = event.target.elements[2].value;
+    const image = event.target.elements[3].value;
+
+    if (!text.trim() && !image.trim()) {
+      alert('Please provide either the Text content or select an Image.');
+      event.target.elements[1].value = '';
+      event.target.elements[3].value = '';
+      return;
+    }
+
+    if (text && !image.trim()) {
+      const to_send = { value: text, type: contentType, id: id };
+      let data = await putFragment_API(user, to_send);
+      if (data) {
+        putContainer.innerText = JSON.stringify(data.data, null, 2);
+      }
+    } else if (image.trim() && !text.trim()) {
+      const to_send = {
+        value: event.target.elements[3].files[0],
+        type: event.target.elements[3].files[0].type,
+        id: id,
+      };
+      let data = await putFragment_API(user, to_send);
+      if (data) {
+        putContainer.innerText = JSON.stringify(data.data, null, 2);
+      }
+    } else {
+      alert('Please provide either the Text content or select an Image. "NOT BOTH"');
+      event.target.elements[1].value = '';
+      event.target.elements[3].value = '';
+    }
+  };
+
+  // Delete Routes.........................................................................
+  deleteFragmentById.onsubmit = async (event) => {
+    event.preventDefault();
+    let data = await deleteFragmentById_API(user, event.target.elements[0].value);
     if (data) {
       console.log(data);
       deleteContainer.innerText = JSON.stringify(data, null, 2);
     }
-  }
+  };
 
   // See if we're signed in (i.e., we'll have a `user` object)
   const user = await getUser();

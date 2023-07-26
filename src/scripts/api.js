@@ -75,6 +75,46 @@ export async function postFragment_API(user, text) {
   }
 }
 
+export async function putFragment_API(user, to_send) {
+  console.log(`Putting ${to_send.type} fragment...`);
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${to_send.id}`, {
+      // Generate headers with the proper Authorization bearer token to pass
+      method: 'PUT',
+      headers: {
+        Authorization: user.authorizationHeaders().Authorization,
+        'Content-Type': to_send.type,
+      },
+      body: to_send.value,
+    });
+    // Catching Known Errors
+    if (res.status === 404 || res.status === 415 || res.status === 400) {
+      let data = await res.json();
+      return {
+        data,
+        type: 'json',
+      };
+    }
+    // Catching Unknown Errors
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    // Everything is good...
+    const data = await res.json();
+    console.log('Got the Response.', data);
+    return {
+      data,
+      type: 'json',
+    };
+  } catch (err) {
+    console.error(`Unable to call Put /v1/fragment/${to_send.id}`, { err });
+    return {
+      type: 'json',
+      data: { error: err.message },
+    };
+  }
+}
+
 /**
  * Posts a new fragment image for the authenticated user.
  *
