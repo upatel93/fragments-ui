@@ -84,7 +84,7 @@ jobs:
           # Use the `github` context to get this, see:
           # https://docs.github.com/en/actions/learn-github-actions/contexts#github-context
           SHA_TAG: sha-${{ github.sha }}
-          API_URL: ${{ env.API_URL }}
+          API_URL: http://ec2co-ecsel-1vtii108aork9-1079626198.us-east-1.elb.amazonaws.com:8080
           AWS_COGNITO_POOL_ID: ${{ secrets.AWS_COGNITO_POOL_ID }}
           AWS_COGNITO_CLIENT_ID: ${{ secrets.AWS_COGNITO_CLIENT_ID }}
           AWS_COGNITO_HOSTED_UI_DOMAIN: ${{ secrets.AWS_COGNITO_HOSTED_UI_DOMAIN }}
